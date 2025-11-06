@@ -1,0 +1,11 @@
+[project]
+name = "geosim"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=7.1.0",
+    "matplotlib>=3.10.7",
+    "rasterio>=1.4.3",
+]
