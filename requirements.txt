@@ -1,0 +1,9 @@
+ultralytics==8.3.33
+opencv-python>=4.8
+numpy>=1.24
+filterpy>=1.4.5
+torch  # CPU wheels are fine; GPU wheel used automatically if present
+matplotlib>=3.7
+pymavlink>=2.4.44
+typeguard>=2.0,<5.0
+

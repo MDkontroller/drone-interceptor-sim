@@ -50,7 +50,7 @@ See detailed instructions: **[data/README.md](data/README.md)**
 # Install Isaac Sim + Isaac Lab
 # See: docs/isaac_sim_setup.md
 ```
-### 3. Run Simulation (comming soon)
+### 3. Run Simulation (coming soon)
 ```bash
 # Train RL policy
 python src/train.py
@@ -58,6 +58,20 @@ python src/train.py
 # Run demo
 python src/demo.py
 ```
+
+If you want to test the current perception and control stack without Isaac Sim,
+you can use the included sample video ('data/test_drone.mp4'):
+
+```bash
+# Run Perception + Control on Sample Video
+python -m main --video data/test_drone.mp4 --show --fps 15
+```
+
+This command will:
+- Run YOLOv8-Nano detection and Kalman Filter tracking in real time
+- Estimate target range and LOS direction
+- Compute Proportional-Navigation (PN) guidance commands (TBD with sim!)
+- Overlay bounding boxes and a live HUD with telemetry
 
 ---
 
