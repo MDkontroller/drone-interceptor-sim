@@ -24,3 +24,11 @@ data/raw/*.tif
 
 # Notebooks
 .ipynb_checkpoints/
+
+
+## eggs 
+
+*.egg-info/
+dist/
+build/
+.tox/
