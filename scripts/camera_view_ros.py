@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """
-| File: 1_px4_single_vehicle.py
+| File: 3_ros2_single_vehicle.py
 | Author: Marcelo Jacinto (marcelo.jacinto@tecnico.ulisboa.pt)
-| License: BSD-3-Clause. Copyright (c) 2023, Marcelo Jacinto. All rights reserved.
-| Description: This files serves as an example on how to build an app that makes use of the Pegasus API to run a simulation with a single vehicle, controlled using the MAVLink control backend.
+| License: BSD-3-Clause. Copyright (c) 2024, Marcelo Jacinto. All rights reserved.
+| Description: This files serves as an example on how to build an app that makes use of the Pegasus API to run a 
+simulation with a single vehicle, controlled using the ROS2 backend system. NOTE: this ROS2 interface only works on Ubuntu 22.04LTS and ROS2 Humble
 """
 
 # Imports to start Isaac Sim from this script
@@ -21,14 +22,17 @@ simulation_app = SimulationApp({"headless": False})
 import omni.timeline
 from omni.isaac.core.world import World
 
+from isaacsim.core.utils.extensions import enable_extension
+enable_extension("isaacsim.ros2.bridge")
+
 # Import the Pegasus API for simulating drones
 from pegasus.simulator.params import ROBOTS, SIMULATION_ENVIRONMENTS
-from pegasus.simulator.logic.state import State
-from pegasus.simulator.logic.backends.px4_mavlink_backend import PX4MavlinkBackend, PX4MavlinkBackendConfig
+from pegasus.simulator.logic.backends.ros2_backend import ROS2Backend
+from pegasus.simulator.logic.graphical_sensors.monocular_camera import MonocularCamera
 from pegasus.simulator.logic.vehicles.multirotor import Multirotor, MultirotorConfig
 from pegasus.simulator.logic.interface.pegasus_interface import PegasusInterface
+
 # Auxiliary scipy and numpy modules
-import os.path
 from scipy.spatial.transform import Rotation
 
 class PegasusApp:
@@ -58,15 +62,17 @@ class PegasusApp:
         # Create the vehicle
         # Try to spawn the selected robot in the world to the specified namespace
         config_multirotor = MultirotorConfig()
-        # Create the multirotor configuration
-        mavlink_config = PX4MavlinkBackendConfig({
-            "vehicle_id": 0,
-            "px4_autolaunch": True,
-            "px4_dir": self.pg.px4_path,
-            "px4_vehicle_model": self.pg.px4_default_airframe # CHANGE this line to 'iris' if using PX4 version bellow v1.14
-        })
-        config_multirotor.backends = [PX4MavlinkBackend(mavlink_config)]
-
+        config_multirotor.backends = [ROS2Backend(vehicle_id=1, config={
+            "namespace": 'drone',
+            "pub_sensors": True,
+            "pub_graphical_sensors": True,
+            "pub_state": True,
+            "pub_tf": False,
+            "sub_control": False}
+            )
+        ]
+        config_multirotor.graphical_sensors = [MonocularCamera("camera", config={"update_rate": 60.0})]
+        
         Multirotor(
             "/World/quadrotor",
             ROBOTS['Iris'],
