@@ -1,4 +1,3 @@
-cat > README.md << 'EOF'
 # Drone Interceptor - AI-Powered Counter-Drone System. 🚀
 
 **Autonomous drone interceptor trained via Reinforcement Learning in photorealistic terrain simulation.**
